@@ -14,7 +14,7 @@ $jdate_start = $start->format('Y-m-d');
 $date_start = $start->format('Y-m-d 08:00');
 //$date_end = date("Y-m-d 23:59", strtotime("+1 days", strtotime($date_start)));
 $jdate_end = date("Y-m-d");
-$date_end = date("Y-m-d 23:59");
+$date_end = date("Y-m-d 23:59" , strtotime($date_start));
 ////// MODEL /////////////////
 $items =  (new Reserve)->getItems(0, $date_start, $date_end); //0 means all items 
 $groups = [];
@@ -30,7 +30,7 @@ foreach ($rows as $row){
 $navbar = ['-7'=>'1週間前','-1'=>'前の日', '+1'=>'次の日','+7'=>'1週間後'];
 echo '<div class="text-left">'. PHP_EOL;
 foreach ($navbar as $delta => $label){
-  $ymd = date("ymd 00:00", strtotime($delta . " days", strtotime($date_start)));
+  $ymd = date("ymd", strtotime($delta . " days", strtotime($date_start)));
   $link='<a href="?do=aic_list&d=%s" class="btn btn-outline-primary m-1">%s</a>' . PHP_EOL;
   printf($link, $ymd, $label); 
 } 
