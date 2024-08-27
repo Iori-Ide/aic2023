@@ -10,3 +10,5 @@ vendor/
 composer.lock
 demo
 data/xxx_*.*
+conf/deployment_env.php
+conf/development_env.php
