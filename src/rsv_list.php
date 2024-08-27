@@ -11,6 +11,7 @@ use aic\views\Html;
 $page = isset($_GET['page']) ? $_GET['page'] : 1; 
 
 echo '<h3>申請状況一覧</h3>' . PHP_EOL;
+$inst_id = isset($_GET['inst']) ? $_GET['inst'] : 0;
 include 'include/_rsv_search.inc.php';
 // pagination on top
 $num_rows = (new Reserve)->getNumRows($inst_id, $date1, $date2, $status);

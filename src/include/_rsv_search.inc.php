@@ -13,6 +13,7 @@ $selected_t = 7;
 if (isset($_POST['id'], $_POST['status'], $_POST['y'], $_POST['m'])){
     $selected_d = isset($_POST['d']) ? $_POST['d'] : $selected_d;
     $selected_t = isset($_POST['t']) ? $_POST['t'] : $selected_t;
+    $inst_id = $_POST['id'];
     $_SESSION['selected_inst'] = $_POST['id'];
     $_SESSION['selected_status'] = $status = $_POST['status'];
     $_SESSION['selected_year'] = $selected_y = $_POST['y'];
@@ -45,7 +46,7 @@ if ($selected_y > 0 and $selected_m > 0){
 </script>
 <?php
 echo '<div class="text-left">' . PHP_EOL;
-echo '<form method="post" action="?do=rsv_list" class="form-inline">'. PHP_EOL;
+echo '<form method="post" action="?do=rsv_list&inst='. $inst_id .'" class="form-inline">'. PHP_EOL;
 echo '<div class="form-group mb-2">'. PHP_EOL;
 $rows = (new Instrument)->getList();
 $options = Html::toOptions($rows, 'id', 'shortname', [0=>'～全ての機器～']);

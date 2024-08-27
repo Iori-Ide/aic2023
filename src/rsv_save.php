@@ -23,8 +23,31 @@ foreach($rsv as $key=>$val){
 
 $errors = [];
 $existed_rsv = (new Reserve)->getListByInst($rsv['instrument_id'], $rsv['stime'], $rsv['etime']);
-if (count($existed_rsv) > 0 ){
+// print_r($existed_rsv);
+// print_r($rsv);
+// if($rsv['code'] != ''){
+$code_key = array_column($existed_rsv, 'code');
+// print_r($code_key);
+// if (in_array($rsv['code'], $code_key)){
+//     echo 'YES' . PHP_EOL;
+// }
+
+function contains_value_other_than($array, $specific_value) {
+    return count(array_filter($array, function($value) use ($specific_value) {
+        return $value !== $specific_value;
+    })) > 0;
+}
+
+$result = contains_value_other_than($code_key, $rsv['code']);
+echo $result;
+// }
+
+if (count($existed_rsv) > 0 && $result == 1){
     $errors[] = sprintf("ほかの予約時間帯と被っています：%s～%s：", Util::jpdate($rsv['stime'],true), Util::jpdate($rsv['etime'],true));
+}
+
+if (strtotime($rsv['stime']) > strtotime($rsv['etime'])){
+    $errors[] = "無効な時間帯です";
 }
 
 $rsv['master_mid'] = (new User)->getLoginMid();

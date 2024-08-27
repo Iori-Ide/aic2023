@@ -17,9 +17,11 @@ $rsv = (new Reserve)->getDetail($rsv_id);
 
 if (isset($_GET['inst'])){
     $rsv['instrument_id'] = $_GET['inst'];
-    $instrument = (new Instrument)->getDetail($rsv['instrument_id']);
-    $rsv['instrument_name'] = $instrument['fullname']; 
 }
+
+$instrument = (new Instrument)->getDetail($rsv['instrument_id']);
+$rsv['instrument_name'] = $instrument['fullname']; 
+
 
 $stime = date('Y-m-d H:i');
 if (isset($_GET['d'])){
@@ -37,17 +39,18 @@ foreach($rsv as $key=>$value){
 }
 $master_sid = isset($rsv['master_member']) ? $rsv['master_member']['sid'] : '';
 
-//$purposes = [0=>'研究(卒論・修論含む)',1=>'学生実験',2=>'学外利用',3=>'点検',4=>'その他(詳細は下の欄へ)'];
-
 $staffs = (new Staff)->getOptions('responsible');
 //print_r($staffs);
 // $rsv_purpose = KsuCode::RSV_PURPOSE;
 // print_r($rsv_purpose);
+// print_r($rsv);
+$rsv_code = isset($rsv['code']) ? $rsv['code'] : '';
 ?>
 <h2>総合機器センター機器設備利用申請</h2>
 <form class="needs-validation" method="post" action="?do=rsv_save">
 <table class="table table-bordered table-hover">
 <input type="hidden" name="id" value="<?=$rsv_id?>">  
+<input type="hidden" name="code" value="<?=$rsv_code?>">
 <input type="hidden" name="instrument_id" value="<?=$rsv['instrument_id']?>">    
 <input type="hidden" name="apply_mid" value="<?=$rsv['apply_member']['id']?>">
 <tr><td width="20%" class="text-info">利用申請者</td>
@@ -109,7 +112,7 @@ foreach(range(0,2) as $i){
 </table>
 <div class="pb-5 mb-5">
 <button type="submit" class="btn btn-outline-primary m-1">保存</button>
-<a href="?do=rsv_list" onclick="history.back();" class="btn btn-outline-info m-1">戻る</a>
+<button type="button" onclick="history.back();" class="btn btn-outline-info m-1">戻る</button>
 
 </div>
 </form>
@@ -167,4 +170,3 @@ $.validator.addMethod(
     "有効な期間ではありません。"
   );
 </script>
-

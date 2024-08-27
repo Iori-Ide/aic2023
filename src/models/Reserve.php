@@ -33,7 +33,7 @@ class Reserve extends Model {
             $rsv['rsv_member'] = $rsv['sample_nature'] = [];  
             $rsv['sample_other']='';    
             $rsv['sample_state']=1;
-            $rsv['other_num']=1;
+            $rsv['other_num']=0;
             $rsv['stime'] = $rsv['etime'] = date('Y-m-d H:i');
             return $rsv;
         }
@@ -133,7 +133,7 @@ class Reserve extends Model {
             $n = KsuCode::PAGE_ROWS;
             $sql .= sprintf(' LIMIT %d OFFSET %d', $n, ($page-1) * $n);
         }
-        // echo $sql;
+        echo $sql;
         $rs = $conn->query($sql);
         if (!$rs) die('エラー: ' . $conn->error);
         return $rs->fetch_all(MYSQLI_ASSOC);
@@ -164,6 +164,7 @@ class Reserve extends Model {
         if (!$rs) die('エラー: ' . $conn->error);
         $rows = $rs->fetch_all(MYSQLI_ASSOC);
         foreach ($rows as $row){
+            while (strtotime($row['stime']) <= (strtotime($row['etime']))) {
             $date = Util::jpdate($row['stime'], false, false);//without year and time
             if (!isset($report[$date])){
                 $report[$date] = $total;
@@ -183,6 +184,8 @@ class Reserve extends Model {
                 $report[$date][$key] += $$key;   
             }
             // printf('%s, %d, %d, %d, %s<br>',$date, $student_n, $staff_n, $other_n, $other_user);
+            $row['stime'] = date("Y-m-d", strtotime("+1 day", strtotime($row['stime'])));
+        }
         }
         ksort($report);
         return ['report'=>$report, 'other'=>$others];

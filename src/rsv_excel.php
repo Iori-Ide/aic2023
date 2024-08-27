@@ -28,13 +28,14 @@ $date2 = sprintf('%d-%d-%d 23:59', $year, $month, $day2);
 $page = 0; // no pagination
 
 $data[] = [
-  '予約番号', '部屋No.', '利用機器名', '開始時刻', '終了時刻', '利用責任者','利用代表者',
+  '予約番号', '部屋No.', '利用機器名', '利用開始日', '開始時刻', '終了時刻', '利用責任者','利用代表者',
   '学生人数','教員人数', 'その他利用者数','その利用者','備考',
 ];
 
 $rows= (new Reserve)->getListByInst($inst, $date1, $date2, $status, $page);
 $reserve_n = count($rows);
 foreach ($rows as $row){ //予約テーブルにある予約の数だけ繰り返す
+  while (strtotime($row['stime']) <= (strtotime($row['etime']))) {
   $date1 = Util::jpdate($row['stime']);
   $date2 = Util::jpdate($row['etime']);
   $time1 = substr($row['stime'], 10,6); // 開始時刻
@@ -49,16 +50,18 @@ foreach ($rows as $row){ //予約テーブルにある予約の数だけ繰り�
   $students = array_filter($rsv_members, function($a){ return $a['category']==1; });
   $student_n = count($students);
   $staff_n = count($rsv_members) - count($students); 
-
   $data[] = [ 
     $row['code'], $row['room_no'], 
     $row['shortname'], //利用機器名(省略)を表示
+    $date1,
     $time1, $time2,
     $row['master_name'] , //利用代表者氏名を表示
     $rsv_names,
     $student_n, $staff_n,$row['other_num'],$row['other_user'],
     $row['memo'] ,
   ];
+  $row['stime'] = date("Y-m-d", strtotime("+1 day", strtotime($row['stime'])));
+  }
 }
 // echo '<pre>'; print_r($data); echo '</pre>';
 
