@@ -38,7 +38,14 @@ foreach ($rows as $row){ //予約テーブルにある予約の数だけ繰り�
   echo '<td>' . substr($row['stime'], 10,6) . '～' . $time2 . '</td>'; //利用時間帯を表示
   echo '<td>' . $row['master_name'] . '</td>';//利用責任者者氏名を表示
   $i = $row['process_status'];
-  echo '<td>' . $rsv_status[$i] . '</td>';//申請状態を表示
+  $status = $rsv_status[$i];
+  
+  if($status == '申請中'){
+    echo '<td><b><font color = "red">' . $status . '</font></b></td>';
+  }else{
+    echo '<td>' . $status. '</td>';
+  }
+  //echo '<td>' . $rsv_status[$i] . '</td>';//申請状態を表示
   $rsv_id = $row['id'];
   $status = $row['process_status'];
   $label = ($status==1 or $status==3) ? '承認' : '却下';

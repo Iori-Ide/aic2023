@@ -23,7 +23,7 @@ foreach($rsv as $key=>$val){
 
 $errors = [];
 $existed_rsv = (new Reserve)->getListByInst($rsv['instrument_id'], $rsv['stime'], $rsv['etime']);
-// print_r($existed_rsv);
+//print_r($existed_rsv);
 // print_r($rsv);
 // if($rsv['code'] != ''){
 $code_key = array_column($existed_rsv, 'code');
@@ -39,7 +39,7 @@ function contains_value_other_than($array, $specific_value) {
 }
 
 $result = contains_value_other_than($code_key, $rsv['code']);
-echo $result;
+//echo $result;
 // }
 
 if (count($existed_rsv) > 0 && $result == 1){

@@ -128,12 +128,12 @@ class Reserve extends Model {
         if ($status > 0){ 
             $sql .= " AND process_status=$status"; 
         }
-        $sql .= ' ORDER BY room_id, stime, etime';
+        $sql .= ' ORDER BY process_status';
         if ($page>0){
             $n = KsuCode::PAGE_ROWS;
             $sql .= sprintf(' LIMIT %d OFFSET %d', $n, ($page-1) * $n);
         }
-        echo $sql;
+        //echo $sql;
         $rs = $conn->query($sql);
         if (!$rs) die('エラー: ' . $conn->error);
         return $rs->fetch_all(MYSQLI_ASSOC);
