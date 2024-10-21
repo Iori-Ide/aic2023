@@ -17,14 +17,26 @@ foreach (['inst','status','year','month','day'] as $item){
   $key = 'selected_' . $item; // 'selected_??'
   $$item = isset($_SESSION[$key]) ? $_SESSION[$key] : 0;
 }
-$year = ($year > 0 ) ? $year: date('Y');
-$month = ($month > 0 ) ? $month: date('m');
-$date1 = $date2 = null;
-$time = mktime(0, 0, 0, $month, 1, $year);
-$day1 = $day > 0 ? $day : 1;  // one day or one month from day 1
-$day2 = $day > 0 ? $day : date('t', $time); // one day or one month until last day
-$date1 = sprintf('%d-%d-%d 00:00', $year, $month, $day1); 
-$date2 = sprintf('%d-%d-%d 23:59', $year, $month, $day2);
+$inst_id = $_SESSION['selected_inst'];
+$status = $_SESSION['selected_status'];
+$y = $_SESSION['selected_year'];
+$m = $_SESSION['selected_month'];
+$d = $_SESSION['selected_day'];
+$t = $_SESSION['selected_timespan'];
+
+$date = new \DateTimeImmutable($y .'-'.$m.'-'.$d);
+$def = [1=>'P1D', 7=>'P1W', 30=>'P1M',];
+$period = new \DateInterval($def[$t]); 
+$date1 = $date->format('Y-m-d 00:00'); 
+$date2 = $date->add($period)->format('Y-m-d 00:00');
+//$year = ($year > 0 ) ? $year: date('Y');
+//$month = ($month > 0 ) ? $month: date('m');
+//$date1 = $date2 = null;
+//$time = mktime(0, 0, 0, $month, 1, $year);
+//$day1 = $day > 0 ? $day : 1;  // one day or one month from day 1
+//$day2 = $day > 0 ? $day : date('t', $time); // one day or one month until last day
+//$date1 = sprintf('%d-%d-%d 00:00', $year, $month, $day1); 
+//$date2 = sprintf('%d-%d-%d 23:59', $year, $month, $day2);
 $page = 0; // no pagination
 
 $data[] = [
@@ -32,7 +44,7 @@ $data[] = [
   '学生人数','教員人数', 'その他利用者数','その利用者','備考',
 ];
 
-$rows= (new Reserve)->getListByInst($inst, $date1, $date2, $status, $page);
+$rows= (new Reserve)->getListByInst($inst_id, $date1, $date2, $status, $page);
 $reserve_n = count($rows);
 foreach ($rows as $row){ //予約テーブルにある予約の数だけ繰り返す
   while (strtotime($row['stime']) <= (strtotime($row['etime']))) {
@@ -63,9 +75,10 @@ foreach ($rows as $row){ //予約テーブルにある予約の数だけ繰り�
   $row['stime'] = date("Y-m-d", strtotime("+1 day", strtotime($row['stime'])));
   }
 }
+$shortname = ($inst_id != 0) ? $row['shortname']: 'all';
 // echo '<pre>'; print_r($data); echo '</pre>';
 
-$filename = sprintf("Report%s.xlsx", $date1);
+$filename = sprintf("Report_%s.xlsx", $shortname.'_'.Util::jpdate($date->format('Y-m-d 00:00'),false));
 $spreadsheet = new Spreadsheet();
 $worksheet = $spreadsheet->getActiveSheet();
 foreach(range('A','L') as $col){ 

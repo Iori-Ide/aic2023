@@ -55,7 +55,7 @@ $options = Html::rangeOptions(date('Y')-1, date('Y')+1, '年');
 echo Html::select($options, 'y', [$selected_y]);
 $options = Html::rangeOptions(1, 12, '月');
 echo Html::select($options, 'm', [$selected_m]);
-$options = Html::rangeOptions(1, 31, '日', [0=>'日選択']);
+$options = Html::rangeOptions(1, 31, '日', [0=>'1日']);
 echo Html::select($options, 'd', [$selected_d]);
 $options = [1=>'１日間', 7=>'１週間', 30=>'１ヶ月',];
 echo Html::select($options, 't', [$selected_t]);

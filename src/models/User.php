@@ -138,7 +138,10 @@ class User extends Model {
         $ldap = ldap_connect(self::ldap_host);
         if(!$ldap) return false;
         ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);        
+        ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+        // Add to avoid timeout
+        ldap_set_option($ldap, LDAP_OPT_NETWORK_TIMEOUT, 10);
+        ldap_set_option($ldap, LDAP_OPT_TIMELIMIT, 10);
         $ldap_bind = @ldap_bind($ldap, $dn, $passwd);
         if(!$ldap_bind)  return false;
         // $target = 'k23gjk03'; // 他ユーザ情報の取得 

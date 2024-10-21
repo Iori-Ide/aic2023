@@ -105,10 +105,12 @@ while (strtotime($current_date) <= strtotime($date_end)) {
     $content = sprintf($link,$_SERVER['PHP_SELF'], $inst_id, $ymd, Util::jpdate($current_date));
     $groups[] = ['id'=>$current_date, 'content'=>$content];
     
-    $start = $current_date . ' 8:00';
-    $end = $current_date . ' 23:59';
+    $start = date($current_date . ' 08:00');
+    $end = date($current_date . ' 23:59');
 
     echo 'make_timeline("visualization", ' . json_encode($items) . ', ' . json_encode($groups) . ', "'.$start.'", "'.$end.'", 3);' . PHP_EOL;
+    //echo 'make_timeline("visualization", ' . json_encode($items) . ', ' . json_encode($groups) . ', "'.$date_start.'", "'.$date_end.'", 3);' . PHP_EOL;
+
     $current_date = date("Y-m-d", strtotime("+1 day", strtotime($current_date)));
     $items = [];
     $groups = [];
