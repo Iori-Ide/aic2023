@@ -17,12 +17,13 @@ foreach (['inst','status','year','month','day'] as $item){
   $key = 'selected_' . $item; // 'selected_??'
   $$item = isset($_SESSION[$key]) ? $_SESSION[$key] : 0;
 }
-$inst_id = $_SESSION['selected_inst'];
-$status = $_SESSION['selected_status'];
-$y = $_SESSION['selected_year'];
-$m = $_SESSION['selected_month'];
-$d = $_SESSION['selected_day'];
-$t = $_SESSION['selected_timespan'];
+
+$inst_id = isset($_SESSION['selected_inst']) ? $_SESSION['selected_inst'] :0;
+$status = isset($_SESSION['selected_status']) ? $_SESSION['selected_status'] :0;
+$y = isset($_SESSION['selected_year']) ? $_SESSION['selected_year'] :$date->format('Y');
+$m = isset($_SESSION['selected_month']) ? $_SESSION['selected_month'] :$date->format('m');
+$d = isset($_SESSION['selected_day']) ? $_SESSION['selected_day'] :$date->format('d');
+$t = isset($_SESSION['selected_timespan']);
 
 $date = new \DateTimeImmutable($y .'-'.$m.'-'.$d);
 $def = [1=>'P1D', 7=>'P1W', 30=>'P1M',];

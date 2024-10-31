@@ -72,7 +72,7 @@ class Html
     }
 
     /** Option selection from options */
-    public static function select($options, $name, $selected=[], $tag='select'){
+    public static function select($options, $name, $selected=[], $tag='select',$blank='0'){
         $tag = strtolower($tag);
         $html = $s_tag = $c_tag = '';
         if (in_array($tag, ['select', 'radio', 'checkbox'])){
@@ -88,6 +88,10 @@ class Html
             $html .= $s_tag;
             foreach ($options as $key=>$value){
                 $choice = in_array($key, $selected) ? ($tag=='select' ? 'selected' : 'checked') : '';
+                if ($blank=="1"){
+                    $html .= '<option value="" selected disabled>利用責任者を選択してください。</option>';
+                    $blank = "0";
+                }
                 $html .= sprintf($o_tag, $key, $choice, $value) . PHP_EOL;
             }
             return $html . $c_tag;

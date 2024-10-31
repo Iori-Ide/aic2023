@@ -34,7 +34,7 @@ class Reserve extends Model {
             $rsv['sample_other']='';    
             $rsv['sample_state']=1;
             $rsv['other_num']=0;
-            $rsv['stime'] = $rsv['etime'] = date('Y-m-d H:i');
+            $rsv['stime'] = $rsv['etime'] = date('Y-m-d H:00');
             return $rsv;
         }
         // real reservation for edit or show
@@ -113,7 +113,7 @@ class Reserve extends Model {
         return $rs->num_rows;
     }
    
-    function getListByInst($inst_id=0, $date1=null, $date2=null, $status=0, $page=0)
+    function getListByInst($inst_id=0, $date1=null, $date2=null, $status=0, $page=0, $sort="")
     {
         $conn = $this->db; 
         $sql = sprintf("SELECT * FROM %s WHERE 1 ", $this->rsv_view);
@@ -128,12 +128,18 @@ class Reserve extends Model {
         if ($status > 0){ 
             $sql .= " AND process_status=$status"; 
         }
-        $sql .= ' ORDER BY process_status';
+        $sql .= " ORDER BY process_status ";
+        // ソートの条件式を追加する。
+        //$sql .= $sort;
+        if ($sort != ""){
+            $sql .= ', ' . $sort;
+        }
+        
         if ($page>0){
             $n = KsuCode::PAGE_ROWS;
             $sql .= sprintf(' LIMIT %d OFFSET %d', $n, ($page-1) * $n);
         }
-        //echo $sql;
+        echo $sql;
         $rs = $conn->query($sql);
         if (!$rs) die('エラー: ' . $conn->error);
         return $rs->fetch_all(MYSQLI_ASSOC);

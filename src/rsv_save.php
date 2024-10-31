@@ -8,8 +8,10 @@ use aic\models\RsvMember;
 use aic\models\RsvSample;
 use aic\models\Util;
 
+
 $data = $_POST;
 $rsv_id = $data['id'];
+//echo $rsv_id;
 $rsv = [
     'id'=>0, 'code'=>'', 'instrument_id'=>0, 'apply_mid'=>0, 'master_mid'=>0,'process_status'=>1,'purpose_id'=>0,
     'purpose'=>'','other_num'=>0, 'other_user'=>'', 'stime'=>'','etime'=>'','sample_name'=>'','sample_state'=>1,
@@ -50,6 +52,10 @@ if (strtotime($rsv['stime']) > strtotime($rsv['etime'])){
     $errors[] = "無効な時間帯です";
 }
 
+
+if ($data['master_sid'] == ""){
+    $errors[] = "利用責任者を選択してください";
+}
 $rsv['master_mid'] = (new User)->getLoginMid();
 $member = (new Member)->getDetailBySid($data['master_sid']);
 if ($member){

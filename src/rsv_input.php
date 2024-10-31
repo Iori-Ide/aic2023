@@ -15,6 +15,12 @@ use aic\views\Html;
 $rsv_id = isset($_GET['id']) ? $_GET['id'] :0;
 $rsv = (new Reserve)->getDetail($rsv_id);
 
+$copy = isset($_GET['copy']) ? $_GET['copy'] : 0;
+
+if ($copy == 1) {
+    $rsv_id = 0;
+}
+
 if (isset($_GET['inst'])){
     $rsv['instrument_id'] = $_GET['inst'];
 }
@@ -23,10 +29,10 @@ $instrument = (new Instrument)->getDetail($rsv['instrument_id']);
 $rsv['instrument_name'] = $instrument['fullname']; 
 
 
-$stime = date('Y-m-d H:i');
+$stime = date('Y-m-d H:00');
 if (isset($_GET['d'])){
     $ymd = DateTime::createFromFormat('ymd', $_GET['d']);
-    $stime = $ymd->format('Y-m-d H:i');
+    $stime = $ymd->format('Y-m-d H:00');
 }
 
 if ($rsv_id == 0){
@@ -64,23 +70,27 @@ $rsv_code = isset($rsv['code']) ? $rsv['code'] : '';
 
     <td colspan="2"><?=Html::input('text','purpose', $rsv['purpose'],' placeholder="「その他」の内容"')?></td>
 <tr><td class="text-info">利用責任者</td>
-    <td colspan="4"><?=Html::select($staffs, 'master_sid', [$master_sid])?></td>
+<td colspan="4"><?=Html::select($staffs, 'master_sid', [$master_sid], 'select', '1')?></td>
 </tr>
 <tr><td class="text-info">利用者<div class="text-danger"> (学籍番号・職員番号を各欄に一つずつ入力。例: 21LL999)</</td>
     <td class="pt-0 pb-0" colspan="4"><table class="table table-light" width="100%">   
 <?php
 $n = count($rsv['rsv_member']);
 foreach(range(0,2) as $i){
-    list($k1, $k2) = [2*$i, 2*$i+1];
+    list($k1, $k2, $k3, $k4) = [2*$i, 2*$i+1, 2*$i+2, 2*$i+3];
     $sid1 = $k1 < $n ? $rsv['rsv_member'][$k1]['sid'] : '';
     $sid2 = $k2 < $n ? $rsv['rsv_member'][$k2]['sid'] : ''; 
+    $sid3 = $k3 < $n ? $rsv['rsv_member'][$k3]['sid'] : '';
+    $sid4 = $k4 < $n ? $rsv['rsv_member'][$k4]['sid'] : '';
     printf('<tr><td>%s</td>', Html::input('text',"rsv_member[]", $sid1 ));
-    printf('<td>%s</td></tr>',Html::input('text',"rsv_member[]", $sid2 ));
+    printf('<td>%s</td>',Html::input('text',"rsv_member[]", $sid2 ));
+    printf('<td>%s</td>',Html::input('text',"rsv_member[]", $sid3 ));
+    printf('<td>%s</td></tr>',Html::input('text',"rsv_member[]", $sid4 ));
 }
 ?>
     </table></td>
 </tr>
-<tr><td class="text-info">その他利用者数 (人)</td>
+<tr><td class="text-info"><div class="text-danger"> (外部利用者のみ入力)</div>その他利用者数 (人)</td>
     <td><?= Html::input('number', 'other_num', $rsv['other_num'],'min=0')?></td>
     <!-- <td class="text-info">内訳等の説明</td> -->
     <td colspan="3"><?= Html::input('text', 'other_user', $rsv['other_user'],'placeholder="内訳：○○株式会社４名、○○学校2名"')?></td>
@@ -89,8 +99,8 @@ foreach(range(0,2) as $i){
     <td colspan="4"><?=$instrument_name?></td>
 </tr>
 <tr><td class="text-info form-group">希望利用日時</td>
-    <td colspan="2"><?= Html::input('datetime-local', 'stime', $rsv['stime'], 'id="stime"')?></td>
-    <td colspan="2"><?= Html::input('datetime-local', 'etime', $rsv['etime'], 'id="etime"')?></td>
+    <td colspan="2"><input type="datetime-local" name="stime" value="<?=$rsv['stime']?>"  min="" step="600" ></td>
+    <td colspan="2"><input type="datetime-local" name="etime" value="<?=$rsv['etime']?>"  step="600" ></td>
 </tr>
 <tr><td class="text-info">試料名</td>
     <td colspan="4"><?= Html::input('text', 'sample_name', $rsv['sample_name']) ?></td>

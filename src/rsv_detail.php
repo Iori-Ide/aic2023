@@ -5,6 +5,9 @@ use aic\models\Reserve;
 use aic\models\User;
 use aic\models\Util;
 
+$page = isset($_GET['page']) ? $_GET['page'] : 1; 
+$wdays = ['日','月','火','水','木','金','土'];
+
 $rsv_id = 0;
 if (isset($_GET['id'])){
   $rsv_id = $_GET['id'];
@@ -33,6 +36,7 @@ $status_class = [1=>'text-info', 2=>'text-success', 3=>'text-danger'];
 <table class="table table-light" width="100%">
 <?php
 foreach($rsv['rsv_member'] as $row){
+  //print_r($row);
   printf('<tr><td>%s</td><td>%s</td><td>%s</td></tr>', $row['sid'], $row['ja_name'], $row['tel_no']);
 }
 ?>
@@ -52,8 +56,11 @@ foreach($rsv['rsv_member'] as $row){
 <tr><td class="text-info">設置場所</td>
 <td colspan="4"><?=$rsv['room_name']?>（<?=$rsv['room_no']?>）</td>
 </tr>
+<tr><td class="text-info">予約申請日時</td>
+<td colspan="4"><?=date('Y年m月d日('.$wdays[date('w',strtotime($rsv['reserved']))].')　H:i' ,strtotime($rsv['reserved']))?></td>
+</tr>
 <tr><td class="text-info">希望利用日時</td>
-<td colspan=4><?=Util::jpdate($rsv['stime'],true)?>～<?=Util::jpdate($rsv['etime'],true)?></td>
+<td colspan=4><?=date('Y年m月d日('.$wdays[date('w',strtotime($rsv['stime']))].')　H:i' ,strtotime($rsv['stime']))?>　～　<?=date('Y年m月d日('.$wdays[date('w',strtotime($rsv['etime']))].')　H:i' ,strtotime($rsv['etime']))?></td>
 </tr>
 <tr><td class="text-info">試料名</td><td colspan=4><?=$rsv['sample_name']?></td>
 </tr>
@@ -78,12 +85,16 @@ foreach($rsv['rsv_member'] as $row){
   if ($is_admin){
     echo '<a class="btn btn-outline-success m-2" href="?do=rsv_grant&id='.$rsv_id.'">'.$status_label. '</a>';
   }
+  if ($is_owner) {
+    echo '<a class="btn btn-outline-primary m-2" href="?do=rsv_input&id='.$rsv_id.'&copy=1">複製</a>' . PHP_EOL;
+  }
   if ($is_admin or $is_owner){
     echo '<a class="btn btn-outline-primary m-2" href="?do=rsv_input&id='. $rsv_id.'">編集</a>' . PHP_EOL 
       . '<a href="#myModal" class="btn btn-outline-danger m-2" data-id='.$rsv_id .' data-toggle="modal">削除</a>' .PHP_EOL;
   }
+  echo '<a href="?do=rsv_list&page=' . $page . '" class="btn btn-outline-info m-2">戻る</a>';
 ?>
-<a href="?do=rsv_list" class="btn btn-outline-info m-2" onclick="history.back();">戻る</a> 
+
 
 <!-- Modal HTML -->
 <div id="myModal" class="modal fade">

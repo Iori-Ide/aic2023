@@ -3,7 +3,7 @@ namespace aic\models;
 
 class KsuCode {
 
-    const PAGE_ROWS = 10;
+    const PAGE_ROWS = 20;
     
     const USER_ROLE = [1=>'学生', 2=>'教育職員', 3=>'事務職員',4=>'その他職員',9=>'管理者'];
     
