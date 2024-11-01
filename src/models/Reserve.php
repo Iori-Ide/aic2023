@@ -107,7 +107,7 @@ class Reserve extends Model {
         if ($status > 0){ 
             $sql .= " AND process_status=$status"; 
         }
-        // echo $sql;
+     //echo $sql;
         $rs = $conn->query($sql);
         if (!$rs) die('エラー: ' . $conn->error);
         return $rs->num_rows;
@@ -128,18 +128,22 @@ class Reserve extends Model {
         if ($status > 0){ 
             $sql .= " AND process_status=$status"; 
         }
-        $sql .= " ORDER BY process_status ";
-        // ソートの条件式を追加する。
-        //$sql .= $sort;
-        if ($sort != ""){
-            $sql .= ', ' . $sort;
+        if(!empty($sort)){
+        $sql .= " ORDER BY " . $sort;
         }
+        // $sql .= " ORDER BY process_status ";
+        // // ソートの条件式を追加する。
+        // //$sql .= $sort;
+        // if ($sort != ""){
+        //     $sql .= ', ' . $sort;
+        // }
         
         if ($page>0){
             $n = KsuCode::PAGE_ROWS;
             $sql .= sprintf(' LIMIT %d OFFSET %d', $n, ($page-1) * $n);
         }
-        echo $sql;
+        //echo $sql;
+
         $rs = $conn->query($sql);
         if (!$rs) die('エラー: ' . $conn->error);
         return $rs->fetch_all(MYSQLI_ASSOC);

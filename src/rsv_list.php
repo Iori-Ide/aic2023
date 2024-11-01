@@ -21,7 +21,7 @@ $_SESSION['sort_index'] = $sort_index;
 // ここに配列を作成する。 $sortに文字列を入れて、MODELで呼び出すだけの状態にする。
 
 $sort_array = [0=>"", 1=>"code", 2 =>"room_id",
-               3=>"fullname", 4=>"stime"];
+               3=>"fullname", 4=>"stime",5=>"process_status"];
 
 if ($sort_index > $desc_index){
   $sort = $sort_array[$sort_index-$desc_index];
@@ -46,9 +46,9 @@ if ($sort_index >= 0){
 
 echo '<table class="table table-hover">'. PHP_EOL;
 // $link = '<a href="?do=rsv_list&sort_index_d=%d">&#x2b07;</a><a href="?do=rsv_list&sort_index_a=%d">&#x2b06;</a>';
-echo '<tr><th id="sort">予約番号'.sprintf($link,1,1).'</th><th id="sort">部屋No.'.sprintf($link,2,2).'</th>
-      <th id="sort">利用機器名'.sprintf($link,3,3).'</th><th>利用目的</th><th>申請日</th><th id="sort">利用予定日'.sprintf($link,4,4).'</th>
-      <th>利用時間帯</th><th>利用責任者</th><th>利用代表者</th><th>承認状態</th><th>操　作</th></tr>'. PHP_EOL;
+echo '<tr><th id="sort"><u>予約番号</u>'.sprintf($link,1,1).'</th><th id="sort"><u>部屋No.</u>'.sprintf($link,2,2).'</th>
+      <th id="sort"><u>利用機器名</u>'.sprintf($link,3,3).'</th><th>利用目的</th><th>申請日</th><th id="sort"><u>利用予定日</u>'.sprintf($link,4,4).'</th>
+      <th>利用時間帯</th><th>利用責任者</th><th>利用代表者</th><<th id="sort"><u>承認状態'.sprintf($link,5,5).'</u></th><th>操　作</th></tr>'. PHP_EOL;
 
 $rows= (new Reserve)->getListByInst($inst_id, $date1, $date2, $status, $page, $sort);
 foreach ($rows as $row){ //予約テーブルにある予約の数だけ繰り返す

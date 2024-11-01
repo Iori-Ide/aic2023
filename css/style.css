@@ -57,7 +57,7 @@ footer {
 }
 th#sort{
   position: relative;
-  color: grey;
+  /* color: grey; */
 }
 
 a#sort {

@@ -35,7 +35,7 @@ if (isset($_GET['d'])){
     $stime = $ymd->format('Y-m-d H:00');
 }
 
-if ($rsv_id == 0){
+if ($rsv_id == 0 or $copy == 1){
     $rsv['stime'] = $stime;
     $rsv['etime'] = $stime;
 }

@@ -22,7 +22,7 @@ if (isset($_POST['uid'], $_POST['pass'])){
         $_SESSION['uid'] = $uid;
         $_SESSION['urole'] = $row['urole'];
         $_SESSION['uname'] = $row['uname'];
-        $_SESSION['sort_index'] = 0;
+        $_SESSION['sort_index'] = 5;
     }else{
         $ldap_info = [];
         $ldap_info = (new User)->ldap_check($uid, $upass);

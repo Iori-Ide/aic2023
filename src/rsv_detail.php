@@ -86,7 +86,7 @@ foreach($rsv['rsv_member'] as $row){
     echo '<a class="btn btn-outline-success m-2" href="?do=rsv_grant&id='.$rsv_id.'">'.$status_label. '</a>';
   }
   if ($is_owner) {
-    echo '<a class="btn btn-outline-primary m-2" href="?do=rsv_input&id='.$rsv_id.'&copy=1">複製</a>' . PHP_EOL;
+    echo '<a class="btn btn-outline-primary m-2" href="?do=rsv_input&id='.$rsv_id.'&copy=1">コピー</a>' . PHP_EOL;
   }
   if ($is_admin or $is_owner){
     echo '<a class="btn btn-outline-primary m-2" href="?do=rsv_input&id='. $rsv_id.'">編集</a>' . PHP_EOL 
